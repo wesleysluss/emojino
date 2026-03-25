@@ -1,4 +1,4 @@
-# Emojino - Remove emojis from text. 
+# Emojino - Remove emojis from text
 
 Just say no to emojis.
 
