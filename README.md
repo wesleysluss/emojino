@@ -10,7 +10,7 @@ Just say no to emojis.
 ## How to Use
 
 0. Download/clone me
-1 chmod 744 emojino
+1. chmod 744 emojino
 2. emojino filename.txt   or   echo "string of emojis"|emojino
 3. Add me to your path for text devoid of emojis but now full of value and joy
 
