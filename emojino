@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+# emojino - remove emojis from text output
+
+import sys
+import os
+import re
+
+def usage(name):
+    try:
+        args = sys.argv[1]
+    except IndexError:
+        if sys.stdin.isatty():
+            print('Usage: %s <file>  or  cat file | %s' % (name, name))
+            sys.exit(1)
+
+def remove_emojis(text):
+    emoji_pattern = re.compile(
+        "["
+        "\U000000A9"             # copyright 
+        "\U000000AE"             # registered 
+        "\U0000203C"             # double exclamation 
+        "\U00002049"             # exclamation question 
+        "\U000020E3"             # combining enclosing keycap 
+        "\U00002122"             # trademark 
+        "\U00002139"             # information source 
+        "\U00002194-\U00002199"  # arrows 
+        "\U000021A9-\U000021AA"  # arrows 
+        "\U00002300-\U000023FF"  # misc technical
+        "\U000024C2"             # circled M 
+        "\U000025A0-\U000025FE"  # geometric shapes 
+        "\U00002600-\U000027BF"  # misc symbols + dingbats
+        "\U00002934-\U00002935"  # arrows 
+        "\U00002B05-\U00002B07"  # arrows 
+        "\U00002B1B-\U00002B1C"  # squares 
+        "\U00002B50"             # star 
+        "\U00002B55"             # circle 
+        "\U00003030"             # wavy dash 
+        "\U0000303D"             # part alternation mark 
+        "\U00003297"             # circled ideograph congratulation 
+        "\U00003299"             # circled ideograph secret 
+        "\U0000FE00-\U0000FE0F"  # variation selectors
+        "\U0001F004"             # mahjong tile 
+        "\U0001F0CF"             # joker 
+        "\U0001F170-\U0001F19A"  # squared latin letters -
+        "\U0001F1E0-\U0001F1FF"  # flags
+        "\U0001F200-\U0001F251"  # squared CJK/katakana -
+        "\U0001F300-\U0001F5FF"  # symbols & pictographs
+        "\U0001F600-\U0001F64F"  # emoticons
+        "\U0001F680-\U0001F6FF"  # transport & map
+        "\U0001F700-\U0001F77F"  # alchemical symbols
+        "\U0001F780-\U0001F7FF"  # geometric shapes extended
+        "\U0001F800-\U0001F8FF"  # supplemental arrows-c
+        "\U0001F900-\U0001F9FF"  # supplemental symbols & pictographs
+        "\U0001FA00-\U0001FA6F"  # chess symbols
+        "\U0001FA70-\U0001FAFF"  # symbols & pictographs extended-a
+        "\U000E0020-\U000E007F"  # tag characters (subdivision flags)
+        "\U0000200D"             # zero width joiner
+        "\U0000200B"             # zero width space
+        "]+",
+        flags=re.UNICODE
+    )
+    return emoji_pattern.sub('', text)
+
+def main():
+    myName = os.path.basename(sys.argv[0])
+    usage(myName)
+
+    if len(sys.argv) > 1:
+        filepath = sys.argv[1]
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                text = f.read()
+        except FileNotFoundError:
+            print('%s: file not found: %s' % (myName, filepath), file=sys.stderr)
+            sys.exit(1)
+        except IOError as e:
+            print('%s: error reading file: %s' % (myName, e), file=sys.stderr)
+            sys.exit(1)
+    else:
+        text = sys.stdin.read()
+
+    print(remove_emojis(text), end='')
+
+if __name__ == '__main__':
+    main()
